@@ -81,3 +81,10 @@ embedded-assistive-vision/
 │   ├── best.pt
 └── README.md                 # Página principal do repositório
 ```
+
+---
+
+## 👨‍💻 Autor
+
+**Rafaela Laryssa Mello Neto**
+**Sophia Ferreira Boonen**
