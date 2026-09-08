@@ -86,5 +86,6 @@ embedded-assistive-vision/
 
 ## 👨‍💻 Autor
 
-**Rafaela Laryssa Mello Neto**
-**Sophia Ferreira Boonen**
+- **Rafaela Laryssa Mello Neto**
+
+- **Sophia Ferreira Boonen**
