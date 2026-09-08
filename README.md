@@ -17,46 +17,46 @@ O objetivo deste projeto é o desenvolvimento de uma tecnologia assistiva vestí
 ## 🛠️ Arquitetura do Sistema
 
 ### Hardware (Edge Computing)
-* **Processador:** Raspberry Pi 4 Model B+ (Raspberry Pi OS)[cite: 1, 2]
-* **Captura de Imagem:** Raspberry Pi Camera Module (Interface CSI)[cite: 1, 2]
-* **Saída de Áudio:** Fone de Ouvido (P2 / Bluetooth) para emissão de alertas em tempo real[cite: 1, 2]
-* **Alimentação:** Power Bank portátil (5V/3A via USB-C)[cite: 1, 2]
+* **Processador:** Raspberry Pi 4 Model B+ (Raspberry Pi OS)
+* **Captura de Imagem:** Raspberry Pi Camera Module (Interface CSI)
+* **Saída de Áudio:** Fone de Ouvido (P2 / Bluetooth) para emissão de alertas em tempo real
+* **Alimentação:** Power Bank portátil (5V/3A via USB-C)
 
 ### Software & Bibliotecas
-* **Linguagem:** Python 3[cite: 1, 2]
-* **Processamento de Vídeo:** OpenCV (`opencv-python`)[cite: 1, 2]
-* **Framework de IA:** `ultralytics` (YOLO e RT-DETR) / `transformers`[cite: 1, 2]
+* **Linguagem:** Python 3
+* **Processamento de Vídeo:** OpenCV (`opencv-python`)
+* **Framework de IA:** `ultralytics` (YOLO e RT-DETR) / `transformers`
 
 ---
 
 ## 📦 Dataset (Roboflow)
 
-Foi construído um **Custom Dataset** focado no domínio de aplicação (corredores escolares) contemplando 5 classes prioritárias de objetos perigosos/obstáculos[cite: 1, 2]:
-1. 🛒 `cleaning cart` (Carrinho de limpeza)[cite: 1, 2]
-2. 🧯 `fire extinguisher` (Extintor de incêndio)[cite: 1, 2]
-3. ⚠️ `safety cone` (Cone de sinalização)[cite: 1, 2]
-4. 🚰 `water fountain` (Bebedouro)[cite: 1, 2]
-5. 🗑️ `trash can` (Lixeira)[cite: 1, 2]
+Foi construído um **Custom Dataset** focado no domínio de aplicação (corredores escolares) contemplando 5 classes prioritárias de objetos perigosos/obstáculos:
+1. 🛒 `cleaning cart` (Carrinho de limpeza)
+2. 🧯 `fire extinguisher` (Extintor de incêndio)
+3. ⚠️ `safety cone` (Cone de sinalização)
+4. 🚰 `water fountain` (Bebedouro)
+5. 🗑️ `trash can` (Lixeira)
 
-> 🔗 **Acesso ao Dataset:** As imagens foram anotadas, pré-processadas e organizadas via plataforma **Roboflow**. *(Adicione aqui o link público do Roboflow se disponível)*[cite: 1, 2].
+> 🔗 **Acesso ao Dataset:** As imagens foram anotadas, pré-processadas e organizadas via plataforma **Roboflow**. *(Adicione aqui o link público do Roboflow se disponível)*.
 
 ---
 
 ## 📊 Comparação e Avaliação de Modelos
 
-Para fundamentar a escolha do modelo ideal para execução em hardware limitado (Raspberry Pi), foram treinadas e avaliadas seis arquiteturas distintas[cite: 1, 2]:
+Para fundamentar a escolha do modelo ideal para execução em hardware limitado (Raspberry Pi), foram treinadas e avaliadas seis arquiteturas distintas:
 
 | Modelo | Tarefa | mAP@50 | mIoU | GFLOPs | F1-Score | Latência | FPS (GPU) | Peso (MB) |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **YOLOv11n**[cite: 1] | Detecção[cite: 1] | **0.995**[cite: 1] | - | **6.3**[cite: 1] | 0.9562[cite: 1] | **8.7 ms**[cite: 1] | **94.3**[cite: 1] | **5.5 MB**[cite: 1] |
-| **RT-DETR-L**[cite: 1] | Detecção[cite: 1] | **0.995**[cite: 1] | - | 103.5[cite: 1] | **0.9762**[cite: 1] | 23.4 ms[cite: 1] | 41.3[cite: 1] | 66.2 MB[cite: 1] |
-| **MobileNetV3**[cite: 1] | Classificação/Det.[cite: 1] | 0.2337[cite: 1] | - | 0.62[cite: 1] | 0.2627[cite: 1] | 33.43 ms[cite: 1] | 29.91[cite: 1] | 13.42 MB[cite: 1] |
-| **SegFormer**[cite: 1] | Segmentação[cite: 1] | - | **0.9077**[cite: 1] | 8.4[cite: 1] | 0.9516[cite: 1] | 12.5 ms[cite: 1] | 80.0[cite: 1] | 14.3 MB[cite: 1] |
-| **U-Net**[cite: 1] | Segmentação[cite: 1] | - | 0.8776[cite: 1] | 16.5[cite: 1] | 0.9348[cite: 1] | 18.2 ms[cite: 1] | 54.9[cite: 1] | 90 MB[cite: 1] |
+| **YOLOv11n** | Detecção | **0.995** | - | **6.3** | 0.9562 | **8.7 ms** | **94.3** | **5.5 MB** |
+| **RT-DETR-L** | Detecção | **0.995** | - | 103.5 | **0.9762** | 23.4 ms | 41.3 | 66.2 MB |
+| **MobileNetV3** | Classificação/Det. | 0.2337 | - | 0.62 | 0.2627 | 33.43 ms | 29.91 | 13.42 MB |
+| **SegFormer** | Segmentação | - | **0.9077** | 8.4 | 0.9516 | 12.5 ms | 80.0 | 14.3 MB |
+| **U-Net** | Segmentação | - | 0.8776 | 16.5 | 0.9348 | 18.2 ms | 54.9 | 90 MB |
 
 ### Principais Conclusões dos Testes
-* **YOLOv11n vs. YOLO26:** O YOLOv11n demonstrou a melhor cobertura ao detectar todas as 5 classes no corredor original[cite: 1, 2], mantendo baixa latência e leveza computacional[cite: 1, 2]. O YOLO26 apresentou níveis mais altos de confiança em classes isoladas e maior mAP@50-95 no treino, mas pecou na cobertura de classes[cite: 2].
-* **Generalização (Ambiente Não Observado):** Em um corredor não presente no treino, a capacidade de detecção caiu para 3 classes em ambos os modelos[cite: 2], evidenciando que fatores de distância e variações visuais exigem maior diversidade no *dataset*[cite: 2].
+* **YOLOv11n vs. YOLO26:** O YOLOv11n demonstrou a melhor cobertura ao detectar todas as 5 classes no corredor original, mantendo baixa latência e leveza computacional. O YOLO26 apresentou níveis mais altos de confiança em classes isoladas e maior mAP@50-95 no treino, mas pecou na cobertura de classes.
+* **Generalização (Ambiente Não Observado):** Em um corredor não presente no treino, a capacidade de detecção caiu para 3 classes em ambos os modelos, evidenciando que fatores de distância e variações visuais exigem maior diversidade no *dataset*.
 
 ---
 
@@ -80,3 +80,4 @@ embedded-assistive-vision/
 ├── models/                   # Pesos otimizados (exportados para inferência)
 │   ├── best.pt
 └── README.md                 # Página principal do repositório
+```
