@@ -1,91 +1,131 @@
-# Visão Assistiva Embarcada com IA (TCC - IFSP)
+# Avaliação de Modelos de Detecção de Objetos para Visão Computacional Assistiva Embarcada
 
-> **Protótipo vestível baseado em Raspberry Pi para detecção de objetos perigosos e navegação assistiva em ambientes escolares.**
+> Protótipo vestível baseado em Raspberry Pi para detecção de obstáculos e navegação assistiva em ambientes escolares.
 
-Este repositório contém os códigos, cadernos de treinamento, documentação técnica e análises comparativas do Trabalho de Conclusão de Curso (TCC) desenvolvido no **Instituto Federal de Educação, Ciência e Tecnologia de São Paulo (IFSP)**.
+Artigo publicado na **REMUNOM** — [ler o artigo completo](https://remunom.ojsbr.com/multidisciplinar/pt_BR/article/view/8023).
 
----
-
-## 📌 Visão Geral do Projeto
-
-Pessoas com deficiência visual enfrentam grandes desafios de mobilidade e segurança em ambientes dinâmicos, como corredores escolares, devido a obstáculos estáticos e temporários. 
-
-O objetivo deste projeto é o desenvolvimento de uma tecnologia assistiva vestível (óculos/boné) equipada com uma câmera e uma unidade de processamento embarcada (*Single Board Computer*). O sistema utiliza modelos avançados de **Visão Computacional** e **Inteligência Artificial** para identificar potenciais riscos em tempo real e emitir alertas auditivos ao usuário.
+Este repositório reúne códigos, cadernos de treinamento e documentação do Trabalho de Conclusão de Curso (TCC) desenvolvido no **Instituto Federal de Educação, Ciência e Tecnologia de São Paulo (IFSP) — Campus Campinas**.
 
 ---
 
-## 🛠️ Arquitetura do Sistema
+## Visão geral
 
-### Hardware (Edge Computing)
-* **Processador:** Raspberry Pi 4 Model B+ (Raspberry Pi OS)
-* **Captura de Imagem:** Raspberry Pi Camera Module (Interface CSI)
-* **Saída de Áudio:** Fone de Ouvido (P2 / Bluetooth) para emissão de alertas em tempo real
-* **Alimentação:** Power Bank portátil (5V/3A via USB-C)
+A deficiência visual pode comprometer a mobilidade e a segurança em ambientes dinâmicos. Este projeto investiga se modelos de visão computacional treinados com dados específicos do cenário de aplicação conseguem detectar objetos relevantes para a navegação, mantendo características adequadas a sistemas embarcados.
 
-### Software & Bibliotecas
+Foi desenvolvido um protótipo vestível com Raspberry Pi, e diferentes arquiteturas de **detecção de objetos** e **segmentação semântica** foram treinadas e avaliadas em um dataset personalizado com cinco classes. Os modelos **YOLO11n** e **YOLO26** foram selecionados para testes em ambiente conhecido e em ambiente não observado.
+
+---
+
+## Resultados experimentais (resumo do artigo)
+
+| Condição | YOLO11n | YOLO26 |
+| :--- | :--- | :--- |
+| Ambiente conhecido | Detectou as **5 classes** | mAP@50-95 e confiança mais altos em classes específicas |
+| Ambiente não observado | Detectou **3 classes** | Detectou **3 classes** |
+
+Os resultados mostram potencial da abordagem e, ao mesmo tempo, limitações de generalização — reforçando a necessidade de maior diversidade no dataset e de avaliações de desempenho no hardware embarcado.
+
+---
+
+## Arquitetura do sistema
+
+### Hardware (edge computing)
+* **Processador:** Raspberry Pi 4 Model B (Raspberry Pi OS)
+* **Captura:** Raspberry Pi Camera Module (CSI) ou webcam USB
+* **Áudio:** fone de ouvido (P2 / Bluetooth) via `espeak` (pt-BR)
+* **Alimentação:** power bank portátil (5V/3A)
+
+### Software
 * **Linguagem:** Python 3
-* **Processamento de Vídeo:** OpenCV (`opencv-python`)
-* **Framework de IA:** `ultralytics` (YOLO e RT-DETR) / `transformers`
+* **Vídeo:** OpenCV (`opencv-python`)
+* **IA:** Ultralytics (`ultralytics` — YOLO / RT-DETR) e demais frameworks nos notebooks
+* **Voz:** `espeak` em thread dedicada (`src/main.py`)
 
 ---
 
-## 📦 Dataset (Roboflow)
+## Dataset
 
-Foi construído um **Custom Dataset** focado no domínio de aplicação (corredores escolares) contemplando 5 classes prioritárias de objetos perigosos/obstáculos:
-1. 🛒 `cleaning cart` (Carrinho de limpeza)
-2. 🧯 `fire extinguisher` (Extintor de incêndio)
-3. ⚠️ `safety cone` (Cone de sinalização)
-4. 🚰 `water fountain` (Bebedouro)
-5. 🗑️ `trash can` (Lixeira)
+Dataset customizado do domínio (corredores escolares) com **5 classes**:
 
-> 🔗 **Acesso ao Dataset:** As imagens foram anotadas, pré-processadas e organizadas via plataforma **Roboflow**. *(Adicione aqui o link público do Roboflow se disponível)*.
+1. `cleaning cart` — Carrinho de limpeza  
+2. `fire extinguisher` — Extintor de incêndio  
+3. `safety cone` — Cone de segurança  
+4. `water fountain` — Bebedouro  
+5. `trash can` — Lixeira  
 
----
-
-## 📊 Comparação e Avaliação de Modelos
-
-Para fundamentar a escolha do modelo ideal para execução em hardware limitado (Raspberry Pi), foram treinadas e avaliadas seis arquiteturas distintas:
-
-| Modelo | Tarefa | mAP@50 | mIoU | GFLOPs | F1-Score | Latência | FPS (GPU) | Peso (MB) |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **YOLOv11n** | Detecção | **0.995** | - | **6.3** | 0.9562 | **8.7 ms** | **94.3** | **5.5 MB** |
-| **RT-DETR-L** | Detecção | **0.995** | - | 103.5 | **0.9762** | 23.4 ms | 41.3 | 66.2 MB |
-| **MobileNetV3** | Classificação/Det. | 0.2337 | - | 0.62 | 0.2627 | 33.43 ms | 29.91 | 13.42 MB |
-| **SegFormer** | Segmentação | - | **0.9077** | 8.4 | 0.9516 | 12.5 ms | 80.0 | 14.3 MB |
-| **U-Net** | Segmentação | - | 0.8776 | 16.5 | 0.9348 | 18.2 ms | 54.9 | 90 MB |
-
-### Principais Conclusões dos Testes
-* **YOLOv11n vs. YOLO26:** O YOLOv11n demonstrou a melhor cobertura ao detectar todas as 5 classes no corredor original, mantendo baixa latência e leveza computacional. O YOLO26 apresentou níveis mais altos de confiança em classes isoladas e maior mAP@50-95 no treino, mas pecou na cobertura de classes.
-* **Generalização (Ambiente Não Observado):** Em um corredor não presente no treino, a capacidade de detecção caiu para 3 classes em ambos os modelos, evidenciando que fatores de distância e variações visuais exigem maior diversidade no *dataset*.
+Imagens anotadas e organizadas via **Roboflow**. Exemplos em `assets/`.
 
 ---
 
-## 📁 Estrutura do Repositório
+## Modelos avaliados
+
+Arquiteturas treinadas nos notebooks (`notebooks/`):
+
+| Modelo | Tarefa |
+| :--- | :--- |
+| YOLO11n / YOLO26 | Detecção |
+| RT-DETR-L | Detecção |
+| MobileNetV3 + SSD | Detecção / classificação |
+| SegFormer | Segmentação |
+| U-Net | Segmentação |
+
+Para a avaliação experimental em campo, destacam-se **YOLO11n** (melhor cobertura de classes no ambiente conhecido) e **YOLO26** (melhores mAP@50-95 e confiança em classes isoladas).
+
+---
+
+## Como executar no Raspberry Pi
+
+```bash
+# Dependências do sistema (síntese de voz)
+sudo apt update && sudo apt install -y espeak
+
+# Ambiente Python
+cd src
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# Coloque o peso treinado (best.pt) no diretório de execução e rode:
+python main.py
+```
+
+O script captura frames da câmera, executa inferência YOLO e anuncia por voz os objetos detectados (com intervalo mínimo entre anúncios da mesma classe).
+
+---
+
+## Estrutura do repositório
 
 ```text
 embedded-assistive-vision/
-├── assets/                 # Imagens utilizadas para o treino
-├── docs/                     # Artigo e anotações teóricas do TCC
-│   ├── anotações_do_tcc.pdf
-│   └── artigo_detecção_de_objetos.pdf
-├── notebooks/                # Treinamentos executados no Google Colab
+├── assets/                   # Exemplos de imagens do dataset
+├── article/                  # PDF do artigo publicado
+├── docs/                     # Anotações e material complementar do TCC
+├── notebooks/                # Treinamentos (Google Colab)
 │   ├── 01_Treino_Dataset_Yolo11_&_Yolov26.ipynb
 │   ├── 02_Treino_Dataset_RT_DETR.ipynb
 │   ├── 03_Treino_Dataset_MobileNetV3_+_SSD.ipynb
 │   ├── 04_Treino_Dataset_SegFormer.ipynb
 │   └── 05_Treino_Dataset_U_Net.ipynb
-├── src/                      # Código que roda no Raspberry Pi
-│   ├── main.py               # Script principal (Captura + Inferência + Áudio)
-│   └── requirements.txt      # Dependências (ultralytics, opencv-python, etc.)
-├── models/                   # Pesos otimizados (exportados para inferência)
-│   ├── best.pt
-└── README.md                 # Página principal do repositório
+├── src/
+│   ├── main.py               # Captura + inferência + áudio (Raspberry Pi)
+│   └── requirements.txt
+└── README.md
 ```
 
 ---
 
-## 👨‍💻 Autor
+## Publicação
 
-- **Rafaela Laryssa Mello Neto**
+**Título:** Avaliação de Modelos de Detecção de Objetos para Visão Computacional Assistiva Embarcada  
 
-- **Sophia Ferreira Boonen**
+**Revista:** REMUNOM  
+
+**Link:** https://remunom.ojsbr.com/multidisciplinar/pt_BR/article/view/8023  
+
+---
+
+## Autores
+
+- **Rafaela Laryssa Mello Neto** — IFSP Campinas ([ORCID](https://orcid.org/0009-0002-9908-8067))
+- **Sophia Ferreira Boonen** — IFSP Campinas ([ORCID](https://orcid.org/0009-0002-3849-028X))
+- **Glauber da Rocha Balthazar** — IFSP Campinas ([ORCID](https://orcid.org/0000-0002-1993-6621))
