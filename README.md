@@ -16,17 +16,6 @@ Foi desenvolvido um protótipo vestível com Raspberry Pi, e diferentes arquitet
 
 ---
 
-## Resultados experimentais (resumo do artigo)
-
-| Condição | YOLO11n | YOLO26 |
-| :--- | :--- | :--- |
-| Ambiente conhecido | Detectou as **5 classes** | mAP@50-95 e confiança mais altos em classes específicas |
-| Ambiente não observado | Detectou **3 classes** | Detectou **3 classes** |
-
-Os resultados mostram potencial da abordagem e, ao mesmo tempo, limitações de generalização — reforçando a necessidade de maior diversidade no dataset e de avaliações de desempenho no hardware embarcado.
-
----
-
 ## Arquitetura do sistema
 
 ### Hardware (edge computing)
